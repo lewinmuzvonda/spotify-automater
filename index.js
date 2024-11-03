@@ -216,7 +216,7 @@ async function generateRandomName() {
         await page.click('button[data-testid="submit"]'); //next
         await page.waitForNavigation();
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 20000));
 
         await page.goto('https://open.spotify.com/');
         // await page.waitForNavigation();

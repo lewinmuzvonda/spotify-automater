@@ -153,7 +153,8 @@ async function generateRandomName() {
         const page = await context.newPage();
 
         // Go to Spotify signup page
-        await page.goto('https://www.spotify.com/ae-en/signup');
+        page.goto('https://www.spotify.com/ae-en/signup');
+        await page.waitForNavigation();
 
         // Generate a random email and password for each iteration
         const randomPassword = await generateRandomPassword();
@@ -163,6 +164,8 @@ async function generateRandomName() {
         const randomGender = await generateRandomGender(); // Random gender
 
         console.log(randomPassword+randomGender);
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
 
         //Enter email address
@@ -211,10 +214,19 @@ async function generateRandomName() {
 
         //Final Step
         await page.click('button[data-testid="submit"]'); //next
-        await new Promise(resolve => setTimeout(resolve, 2000));
         await page.waitForNavigation();
 
         await new Promise(resolve => setTimeout(resolve, 2000));
+
+        await page.goto('https://open.spotify.com/');
+        // await page.waitForNavigation();
+
+        await new Promise(resolve => setTimeout(resolve, 6000));
+
+        await page.click('button[data-testid="user-widget-link"]'); // menu
+        await page.click('button[data-testid="user-widget-dropdown-logout"]'); // logout
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
        
         // Close the page and go back to the signup
         await page.close();

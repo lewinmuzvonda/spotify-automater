@@ -144,11 +144,11 @@ async function generateRandomName() {
     // Initialize the CSV file
     await initializeCSV();
 
-    while(true){
+    // Create a new incognito browser context
+    const context = await browser.createBrowserContext();
 
-        // Create a new incognito browser context
-        const context = await browser.createBrowserContext();
-            
+    while(true){
+                
         // Open a new page in the incognito context
         const page = await context.newPage();
 
@@ -184,51 +184,47 @@ async function generateRandomName() {
         await humanType(page, 'input[id="day"]', day.toString()); // Day
         await page.select('select[id="month"]', month.toString()); // Month
         await humanType(page, 'input[id="year"]', year.toString()); // Year
+        await page.click('#gender_option_male');
 
-        // if (randomGender === 'male') {
-        //     console.log(randomGender);
-            await page.click('#gender_option_male');
-        //     // await page.click('input[type="radio"][value="male"]'); // Click male radio button
-        // } else {
-        //     console.log(randomGender);
-        //     await page.click('#gender_option_female');
-        //     // await page.click('input[type="radio"][value="female"]'); // Click female radio button
-        // }
+        if (randomGender === 'male') {
+            console.log(randomGender);
+            await page.click('label[for="gender_option_male"');
+        } else {
+            console.log(randomGender);
+            await page.click('label[for="gender_option_female"');
+        }
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        await page.keyboard.press('PageDown');
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         await page.click('button[data-testid="submit"]'); //next
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        await page.keyboard.press('PageDown');
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         //Final Step
         await page.click('button[data-testid="submit"]'); //next
-        // await page.waitForNavigation();
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Go to a specific playlist or song
-        await page.goto('https://open.spotify.com/');
-        
-        // Wait for 3 seconds
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
-        //Open logout Menu
-        await page.click('button[data-testid="user-widget-link"]'); //menu 
-        await page.click('button[data-testid="user-widget-dropdown-logout"]'); //logout
-        
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await page.waitForNavigation();
 
+        await new Promise(resolve => setTimeout(resolve, 2000));
+       
         // Close the page and go back to the signup
         await page.close();
 
         // Append the email and password to the CSV file
-        appendToCSV(randomEmail, randomPassword);
+        await appendToCSV(randomEmail, randomPassword);
 
          // Wait for 5 seconds
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
-        // Close the browser
         // await browser.close();
 
     }

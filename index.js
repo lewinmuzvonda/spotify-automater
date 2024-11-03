@@ -221,6 +221,8 @@ async function generateRandomName() {
         await page.goto('https://open.spotify.com/');
         // await page.waitForNavigation();
 
+        await appendToCSV(randomEmail, randomPassword);
+
         await new Promise(resolve => setTimeout(resolve, 6000));
 
         await page.click('button[data-testid="user-widget-link"]'); // menu
@@ -232,7 +234,7 @@ async function generateRandomName() {
         await page.close();
 
         // Append the email and password to the CSV file
-        await appendToCSV(randomEmail, randomPassword);
+        
 
          // Wait for 5 seconds
         await new Promise(resolve => setTimeout(resolve, 3000));

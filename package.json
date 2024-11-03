@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@nut-tree-fork/nut-js": "^4.2.2",
+    "play-sound": "^1.1.6",
     "puppeteer": "^23.6.1"
   }
 }

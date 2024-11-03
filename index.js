@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+const player = require('play-sound')(opts = {});
 
 const csvFilePath = path.join(__dirname, 'credentials.csv');
 
@@ -216,8 +217,38 @@ async function generateRandomName() {
         await page.click('button[data-testid="submit"]'); //next
         await page.waitForNavigation();
 
-        await new Promise(resolve => setTimeout(resolve, 20000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
+        // Check if CAPTCHA challenge page is encountered
+        if (page.url().includes('challenge.spotify.com')) {
+            console.log('CAPTCHA is present on the page.');
+
+            // Function to play sound continuously until resolved
+            const playSoundContinuously = () => {
+                const sound = player.play('beep.wav', (err) => {
+                    if (err) console.error('Error playing sound:', err);
+                });
+
+                return new Promise(resolve => {
+                    sound.on('close', resolve); // Resolve when sound is finished
+                });
+            };
+
+            // Repeat sound until user resolves CAPTCHA
+            const soundInterval = setInterval(async () => {
+                await playSoundContinuously();
+            }, 3000); // Play sound every 2 seconds
+
+            await page.evaluate(() => {
+                alert('Solve the CAPTCHA and click continue'); // Trigger a window alert
+            });;
+
+            await new Promise(resolve => setTimeout(resolve, 20000));
+            clearInterval(soundInterval); // Stop playing sound once resolved
+
+           
+        }
+        
         await page.goto('https://open.spotify.com/');
         // await page.waitForNavigation();
 
